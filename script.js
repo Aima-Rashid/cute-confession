@@ -149,7 +149,7 @@ function drawRain(introState, rainbowOn, freeze){
         drops[i] = 0;
         columnWord[i] = assignColumnWord();
       }
-      drops[i] += 0.55 + Math.random()*0.2;
+      drops[i] += 0.55 + Math.random()*0.4;
     }
   }
 }
@@ -175,43 +175,29 @@ const off = document.createElement('canvas');
 const offCtx = off.getContext('2d');
 
 function sampleText(text, fontSizePx, step, yOffset){
+  off.width = W;
+  off.height = H;
+  offCtx.clearRect(0,0,W,H);
+  offCtx.fillStyle = "#fff";
   offCtx.textAlign = "center";
   offCtx.textBaseline = "middle";
   let size = fontSizePx;
   offCtx.font = `900 ${size}px 'Arial Black', sans-serif`;
-  let textWidth = offCtx.measureText(text).width;
+  let width = offCtx.measureText(text).width;
   const maxWidth = W * 0.82;
-  while(textWidth > maxWidth && size > 16){
+  while(width > maxWidth && size > 16){
     size -= 4;
     offCtx.font = `900 ${size}px 'Arial Black', sans-serif`;
-    textWidth = offCtx.measureText(text).width;
+    width = offCtx.measureText(text).width;
   }
-
-  const cx = W/2, cy = H/2 + yOffset;
-  const pad = size * 0.6;
-  const left = Math.max(0, Math.floor(cx - textWidth/2 - pad));
-  const right = Math.min(W, Math.ceil(cx + textWidth/2 + pad));
-  const top = Math.max(0, Math.floor(cy - size));
-  const bottom = Math.min(H, Math.ceil(cy + size));
-  const bw = Math.max(1, right - left);
-  const bh = Math.max(1, bottom - top);
-
-  off.width = bw;
-  off.height = bh;
-  offCtx.clearRect(0,0,bw,bh);
-  offCtx.fillStyle = "#fff";
-  offCtx.textAlign = "center";
-  offCtx.textBaseline = "middle";
-  offCtx.font = `900 ${size}px 'Arial Black', sans-serif`;
-  offCtx.fillText(text, cx - left, cy - top);
-
-  const imgData = offCtx.getImageData(0, 0, bw, bh).data;
+  offCtx.fillText(text, W/2, H/2 + yOffset);
+  const imgData = offCtx.getImageData(0,0,W,H).data;
   const points = [];
-  for(let y=0; y<bh; y+=step){
-    for(let x=0; x<bw; x+=step){
-      const idx = (y*bw + x)*4;
+  for(let y=0; y<H; y+=step){
+    for(let x=0; x<W; x+=step){
+      const idx = (y*W + x)*4;
       if(imgData[idx+3] > 128){
-        points.push({ x: x+left, y: y+top });
+        points.push({x, y});
       }
     }
   }
@@ -260,8 +246,8 @@ function scatterActiveParticles(radiusRange, opVal){
 function updateParticles(t){
   for(const p of particles){
     if(!p.active) continue;
-    const jitterX = Math.sin(t + p.seed) * 0.5;
-    const jitterY = Math.cos(t*1.3 + p.seed) * 0.5;
+    const jitterX = Math.sin(t + p.seed) * 1.2;
+    const jitterY = Math.cos(t*1.3 + p.seed) * 1.2;
     p.x += (p.tx + jitterX - p.x) * currentEase;
     p.y += (p.ty + jitterY - p.y) * currentEase;
   }
@@ -290,7 +276,7 @@ let frameCount = 0;
 
 const finalWords = ["YOU", "ARE", "GAY!"];
 let finalWordIndex = 0;
-const FINAL_WORD_HOLD = 46;
+const FINAL_WORD_HOLD = 60;
 
 function showFinalWord(idx, ease){
   currentEase = ease;
@@ -314,7 +300,7 @@ function enterStage(s){
     scatterActiveParticles([1,1.8], 0.4);
   } else if(s === STAGE.FINAL){
     finalWordIndex = 0;
-    showFinalWord(0, 0.11);
+    showFinalWord(0, 0.3);
   } else if(s === STAGE.HOLD){
     freezeTimer = FREEZE_FRAMES;
     burstTriggered = false;
@@ -326,7 +312,7 @@ const STAGE_LEN = {
   [STAGE.NUM2]: 95,
   [STAGE.NUM1]: 100,
   [STAGE.SCATTER]: 60,
-  [STAGE.PAUSE]: 55,
+  [STAGE.PAUSE]: 130,
   [STAGE.HOLD]: 200,
   [STAGE.FADEOUT]: 60
 };
@@ -377,7 +363,7 @@ function loop(){
     else if(stage === STAGE.FINAL && stageTimer > FINAL_WORD_HOLD){
       finalWordIndex++;
       if(finalWordIndex < finalWords.length){
-        showFinalWord(finalWordIndex, 0.11);
+        showFinalWord(finalWordIndex, 0.09);
         stageTimer = 0;
       } else {
         enterStage(STAGE.HOLD);
