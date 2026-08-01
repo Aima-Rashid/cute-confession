@@ -4,7 +4,7 @@ A full-screen canvas animation — a Matrix-style rain intro that reveals top to
 
 ## Live demo
 
-If hosted via GitHub Pages: `https://your-username.github.io/your-repo-name/`
+If hosted via GitHub Pages: `https://aima-rashid.github.io/cute-confession/`
 
 ## Running locally
 
