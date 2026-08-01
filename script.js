@@ -149,7 +149,7 @@ function drawRain(introState, rainbowOn, freeze){
         drops[i] = 0;
         columnWord[i] = assignColumnWord();
       }
-      drops[i] += 0.55 + Math.random()*0.4;
+      drops[i] += 0.55 + Math.random()*0.2;
     }
   }
 }
