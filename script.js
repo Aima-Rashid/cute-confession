@@ -363,7 +363,7 @@ function loop(){
     else if(stage === STAGE.FINAL && stageTimer > FINAL_WORD_HOLD){
       finalWordIndex++;
       if(finalWordIndex < finalWords.length){
-        showFinalWord(finalWordIndex, 0.09);
+        showFinalWord(finalWordIndex, 0.16);
         stageTimer = 0;
       } else {
         enterStage(STAGE.HOLD);
