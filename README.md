@@ -1,4 +1,4 @@
-# Proud of You 🌈
+# Proud of You 
 
 A full-screen canvas animation — a Matrix-style rain intro that reveals top to bottom, a glowing countdown (3 → 2 → 1), and a message that assembles itself out of the falling code before bursting into rainbow colors and confetti.
 
